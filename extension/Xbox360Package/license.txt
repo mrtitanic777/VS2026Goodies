@@ -1,0 +1,12 @@
+Xbox 360 Extensions for Visual Studio 2026
+==========================================
+
+This extension integrates the Xbox 360 XDK (21256) build toolchain, project
+templates, and deployment tooling into Visual Studio 2026.
+
+It is intended for use with a legally obtained Xbox 360 SDK (XEDK) and for
+homebrew / RGH / JTAG development on hardware you own. Microsoft, Xbox, and
+Xbox 360 are trademarks of Microsoft Corporation. This project is not
+affiliated with or endorsed by Microsoft.
+
+Provided as-is, without warranty of any kind.

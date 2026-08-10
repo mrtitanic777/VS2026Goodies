@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+
+  <Commands package="guidXbox360Package">
+    <Groups>
+      <!-- A command group placed directly on the Tools menu (parent = the menu itself). -->
+      <Group guid="guidXbox360CmdSet" id="Xbox360MenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidXbox360CmdSet" id="cmdidSampleBrowser" priority="0x0100" type="Button">
+        <Parent guid="guidXbox360CmdSet" id="Xbox360MenuGroup"/>
+        <Strings>
+          <ButtonText>Xbox 360 Sample Browser</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXbox360CmdSet" id="cmdidDeployRun" priority="0x0101" type="Button">
+        <Parent guid="guidXbox360CmdSet" id="Xbox360MenuGroup"/>
+        <Strings>
+          <ButtonText>Deploy &amp;&amp; Run to Xbox 360...</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXbox360CmdSet" id="cmdidSetConsole" priority="0x0102" type="Button">
+        <Parent guid="guidXbox360CmdSet" id="Xbox360MenuGroup"/>
+        <Strings>
+          <ButtonText>Set Default Xbox 360 Console...</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXbox360CmdSet" id="cmdidInstallPlatform" priority="0x0103" type="Button">
+        <Parent guid="guidXbox360CmdSet" id="Xbox360MenuGroup"/>
+        <Strings>
+          <ButtonText>Install/Update Xbox 360 Platform...</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXbox360CmdSet" id="cmdidDebugOutput" priority="0x0104" type="Button">
+        <Parent guid="guidXbox360CmdSet" id="Xbox360MenuGroup"/>
+        <Strings>
+          <ButtonText>Xbox 360 Debug Output (Connect)...</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXbox360CmdSet" id="cmdidDebugOutputStop" priority="0x0105" type="Button">
+        <Parent guid="guidXbox360CmdSet" id="Xbox360MenuGroup"/>
+        <Strings>
+          <ButtonText>Xbox 360 Debug Output (Disconnect)</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXbox360CmdSet" id="cmdidDeployDebug" priority="0x0106" type="Button">
+        <Parent guid="guidXbox360CmdSet" id="Xbox360MenuGroup"/>
+        <Strings>
+          <ButtonText>Deploy &amp;&amp; Debug on Xbox 360 (F5)...</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXbox360CmdSet" id="cmdidDebugContinue" priority="0x0107" type="Button">
+        <Parent guid="guidXbox360CmdSet" id="Xbox360MenuGroup"/>
+        <Strings>
+          <ButtonText>Xbox 360 Debug: Continue</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXbox360CmdSet" id="cmdidStopDebug" priority="0x0108" type="Button">
+        <Parent guid="guidXbox360CmdSet" id="Xbox360MenuGroup"/>
+        <Strings>
+          <ButtonText>Xbox 360 Debug: Stop</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidXbox360Package" value="{9C1A0E10-3606-4360-8360-ABCDEF012345}" />
+    <GuidSymbol name="guidXbox360CmdSet" value="{D1CE0001-3606-4360-8360-ABCDEF012345}">
+      <IDSymbol name="Xbox360MenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidSampleBrowser" value="0x0100" />
+      <IDSymbol name="cmdidDeployRun" value="0x0101" />
+      <IDSymbol name="cmdidSetConsole" value="0x0102" />
+      <IDSymbol name="cmdidInstallPlatform" value="0x0103" />
+      <IDSymbol name="cmdidDebugOutput" value="0x0104" />
+      <IDSymbol name="cmdidDebugOutputStop" value="0x0105" />
+      <IDSymbol name="cmdidDeployDebug" value="0x0106" />
+      <IDSymbol name="cmdidDebugContinue" value="0x0107" />
+      <IDSymbol name="cmdidStopDebug" value="0x0108" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>

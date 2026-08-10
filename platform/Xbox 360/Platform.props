@@ -1,0 +1,11 @@
+<!--
+Platform.props  —  Xbox 360
+Mirrors the stock platform shim: exposes the platform folder and defers to the
+shared Microsoft.Cpp.Platform.props for the common C++ property model.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PlatformFolder>$(MSBuildThisFileDirectory)</_PlatformFolder>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Platform.props"/>
+</Project>

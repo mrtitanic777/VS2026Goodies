@@ -1,0 +1,40 @@
+// Xbox360.DebugEngine.pkgdef — registers the Xbox 360 AD7 debug engine with VS.
+// Bundled into the VSIX; VS applies it on extension load.
+
+// ---- The AD7 engine metadata (AD7Metrics\Engine\{EngineGuid}) ----
+[$RootKey$\AD7Metrics\Engine\{B7A2F1C0-3606-4360-8360-000000000E01}]
+@="Xbox 360 Debugger"
+"CLSID"="{B7A2F1C0-3606-4360-8360-000000000E01}"
+"Attach"=dword:00000001
+"AddressBP"=dword:00000000
+"CallStackBP"=dword:00000001
+"AutoSelectPriority"=dword:00000004
+"Exceptions"=dword:00000000
+"EngineCanWatchProcess"=dword:00000001
+"AlwaysLoadLocal"=dword:00000001
+"LoadUnderWOW64"=dword:00000000
+"PortSupplier"="{B7A2F1C0-3606-4360-8360-000000000E02}"
+
+// ---- The engine COM class (managed, hosted by mscoree) ----
+[$RootKey$\CLSID\{B7A2F1C0-3606-4360-8360-000000000E01}]
+@="Xbox360.DebugEngine.AD7Engine"
+"InprocServer32"="$WinDir$\SYSTEM32\MSCOREE.DLL"
+"Class"="Xbox360.DebugEngine.AD7Engine"
+"CodeBase"="$PackageFolder$\DebugEngine\Xbox360.DebugEngine.dll"
+"Assembly"="Xbox360.DebugEngine"
+"ThreadingModel"="Free"
+
+// ---- The port supplier metadata (AD7Metrics\PortSupplier\{PortSupplierGuid}) ----
+// Enumerates/attaches to Xbox 360 consoles for the Attach-to-Process and launch flows.
+[$RootKey$\AD7Metrics\PortSupplier\{B7A2F1C0-3606-4360-8360-000000000E02}]
+@="Xbox 360 Consoles"
+"CLSID"="{B7A2F1C0-3606-4360-8360-000000000E02}"
+
+// ---- The port supplier COM class (managed, hosted by mscoree) ----
+[$RootKey$\CLSID\{B7A2F1C0-3606-4360-8360-000000000E02}]
+@="Xbox360.DebugEngine.AD7PortSupplier"
+"InprocServer32"="$WinDir$\SYSTEM32\MSCOREE.DLL"
+"Class"="Xbox360.DebugEngine.AD7PortSupplier"
+"CodeBase"="$PackageFolder$\DebugEngine\Xbox360.DebugEngine.dll"
+"Assembly"="Xbox360.DebugEngine"
+"ThreadingModel"="Free"

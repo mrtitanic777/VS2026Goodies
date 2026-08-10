@@ -1,0 +1,35 @@
+Xbox 360 Extensions for Visual Studio 2022 / 2026
+Copyright (c) 2026 Logan Greer and contributors
+
+This product is original work licensed under the MIT License (see LICENSE).
+
+------------------------------------------------------------------------------
+Relationship to the Microsoft Xbox 360 SDK (XDK)
+------------------------------------------------------------------------------
+
+This project is an independent, unofficial tool. It is not affiliated with,
+endorsed by, or sponsored by Microsoft. "Xbox 360" and related marks are
+trademarks of Microsoft Corporation.
+
+This repository does NOT contain or redistribute any Microsoft Xbox 360 SDK
+files (headers, libraries, tools, samples, MSBuild platform files, property
+pages, type libraries, or interop assemblies).
+
+To build and use this tooling you must supply your own legally licensed Xbox
+360 XDK. Two Microsoft-owned artifacts required at build/run time are generated
+locally, on your machine, from your own installed XDK — and are git-ignored so
+they are never committed to this repository:
+
+  1. extension/Xbox360Package/libs/Interop.XDevkit.dll
+     Generated from your XDK's include/win32/XDevkit.idl using midl + tlbimp
+     (see generate-interop.ps1).
+
+  2. platform/Xbox 360/1033/*.xml  (IDE property-page schemas)
+     Copied from the Xbox 360 MSBuild platform installed by your XDK's Visual
+     Studio integration, under:
+       %ProgramFiles(x86)%\MSBuild\Microsoft.Cpp\v4.0\Platforms\Xbox 360\1033\
+     (see fetch-property-pages.ps1).
+
+A Visual Studio extension (.vsix) that you build locally will embed these
+Microsoft-owned files. Such a build is for your own use with your own licensed
+XDK; redistributing a built .vsix is outside the scope of this repository.

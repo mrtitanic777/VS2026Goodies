@@ -1,0 +1,50 @@
+<!--
+Platform.Common.props  —  Xbox 360
+Imported at the tail of Toolset.props. Holds properties common to all Xbox 360
+toolsets. Kept minimal for now; toolset-specific tool wiring lives in Toolset.props.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!-- Default output paths, matching the ORIGINAL XDK platform exactly: output and
+         intermediates go in project-level $(Configuration)\ (Debug\, Release\, ...), not a
+         $(Platform)\ subfolder. Required because we skip the MSVC toolset props that would
+         otherwise supply a default (without it, a project that doesn't set OutDir — e.g. the
+         wizard template — fails with "The OutputPath property is not set"). -->
+    <IntDir Condition="'$(IntDir)'=='' and '$(IntermediateOutputPath)' != ''">$(IntermediateOutputPath)</IntDir>
+    <IntDir Condition="'$(IntDir)'=='' and '$(RunCodeAnalysisOnce)'=='true'">$(Configuration)\CodeAnalysis\</IntDir>
+    <IntDir Condition="'$(IntDir)'==''">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(OutDir)'=='' and '$(ProjectDir)' != ''">$(ProjectDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(OutDir)'==''">$(IntDir)</OutDir>
+
+    <!-- The linker emits a raw PE image; imagexex then wraps it into the .xex. -->
+    <TargetExt Condition="'$(ConfigurationType)' == 'Application' and '$(TargetExt)' == ''">.exe</TargetExt>
+    <TargetExt Condition="'$(ConfigurationType)' == 'DynamicLibrary' and '$(TargetExt)' == ''">.dll</TargetExt>
+    <TargetExt Condition="'$(ConfigurationType)' == 'StaticLibrary' and '$(TargetExt)' == ''">.lib</TargetExt>
+
+    <!-- Xbox 360 titles do not use Win32 SxS manifests. Force these off: the
+         just-imported Microsoft.Cpp.Common.props defaults them to 'true', and the
+         XDK linker rejects /manifest:embed (LNK1117). -->
+    <EmbedManifest>false</EmbedManifest>
+    <GenerateManifest>false</GenerateManifest>
+
+    <!-- vcpkg has no Xbox 360 packages; its machine-wide MSBuild integration otherwise
+         runs an applocal-deploy step on every link (tries pwsh.exe -> "not recognized",
+         then falls back). Disable it for this platform. Set before vcpkg.props, whose
+         default is Condition="'$(VcpkgEnabled)'==''". -->
+    <VcpkgEnabled>false</VcpkgEnabled>
+
+    <!-- Property-page parity with the VS2010 XDK. Take the property grid over from the generic
+         MSVC pages so it surfaces the AUTHENTIC XDK rule files (XDK-specific cl/link/lib switches,
+         imagexex, deploy, the Xbox 360 remote debugger) instead of modern Win32 pages whose
+         switches the XDK toolchain doesn't understand. Mirrors the original platform's
+         Microsoft.CppCommon.Xbox 360.targets. These MUST be set here (props phase): the stock
+         Microsoft.CppBuild.targets guards its default PropertyPageSchema ItemGroups with
+         Condition="'$(UseDefaultPropertyPageSchemas)' != 'false'". The matching schema list is
+         declared in Platform.targets. -->
+    <UseDefaultPropertyPageSchemas>false</UseDefaultPropertyPageSchemas>
+    <UseDefaultGeneralPropertyPageSchema>false</UseDefaultGeneralPropertyPageSchema>
+    <Xbox360PropertyPagesPath>$(MSBuildThisFileDirectory)1033\</Xbox360PropertyPagesPath>
+    <Xbox360PropertyPagesPath Condition="'$(LangID)' != '' and Exists('$(MSBuildThisFileDirectory)$(LangID)\')">$(MSBuildThisFileDirectory)$(LangID)\</Xbox360PropertyPagesPath>
+
+  </PropertyGroup>
+</Project>

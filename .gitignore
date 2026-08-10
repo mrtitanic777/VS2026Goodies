@@ -1,0 +1,57 @@
+# ---------------------------------------------------------------------------
+# Microsoft-owned material — GENERATED LOCALLY by setup, NEVER committed.
+# This repo redistributes no Microsoft SDK files. `setup.ps1` materializes these
+# from your own installed Xbox 360 XDK. See README "Setup".
+# ---------------------------------------------------------------------------
+extension/Xbox360Package/libs/Interop.XDevkit.dll
+platform/Xbox 360/1033/
+templates/Xbox360Application/TEST.cpp
+# midl byproducts (in case midl is ever run from the repo root)
+XDevkit.h
+XDevkit_i.c
+XDevkit_p.c
+dlldata.c
+XDevkit.tlb
+
+# Build artifacts
+*.obj
+*.xex
+*.pe
+*.xdb
+*.exe
+*.pdb
+*.ilk
+*.tlog
+*.recipe
+*.lastbuildstate
+*.CppClean.log
+*.applocal.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Generated writable VCTargets copy (from build-harness.ps1)
+test-harness/
+
+# Full XDK sample suite copied out of the SDK for the build sweep (regenerable):
+#   robocopy "%XEDK%\Source\Samples" sample-sweep /E /XD Debug Release x64 CodeAnalysis Profile ...
+sample-sweep/
+
+# XDK sample content fetched locally (via setup-samples.ps1) — Microsoft-owned, not tracked
+test/Common/
+test/Media/
+test/System/
+test/TriangleHLSL/
+test/TEST/
+test/Foo/
+
+# Staged VSIX payloads (produced by build-vsix.ps1)
+extension/Xbox360Package/XdkHostPayload/
+extension/Xbox360Package/PlatformPayload/Xbox 360/
+extension/Xbox360Package/ProjectTemplates/
+
+# .NET / VSIX build outputs
+**/bin/
+**/obj/

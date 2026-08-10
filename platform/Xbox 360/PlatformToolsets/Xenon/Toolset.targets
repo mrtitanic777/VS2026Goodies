@@ -1,0 +1,13 @@
+<!--
+Toolset.targets  —  Xbox 360 / Xenon toolset
+Brings in the stock C++ build targets (ClCompile / Link / Lib), which drive the
+XDK tools via $(CLToolExe)/$(CLToolPath) etc. set in Toolset.props. The Windows
+SDK targets are intentionally NOT imported (no Win32 RC/MT/WindowsSDK for Xbox).
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildThisFileDirectory)ImportBefore\*.targets" Condition="Exists('$(MSBuildThisFileDirectory)ImportBefore')" />
+
+  <Import Project="$(VCTargetsPath)\Microsoft.CppCommon.targets" />
+
+  <Import Project="$(MSBuildThisFileDirectory)ImportAfter\*.targets" Condition="Exists('$(MSBuildThisFileDirectory)ImportAfter')" />
+</Project>

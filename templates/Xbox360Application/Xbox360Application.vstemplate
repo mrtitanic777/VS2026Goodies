@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Xbox 360 Application</Name>
+    <Description>The standard Xbox 360 Application starter (XDK 21256): a precompiled-header project (stdafx) that renders a spinning triangle with inline HLSL shaders. Builds with the Xbox 360 (Xenon) platform toolset and packages to a .xex.</Description>
+    <ProjectType>VC</ProjectType>
+    <TemplateID>Xbox360.Application</TemplateID>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>Xbox360App</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <LanguageTag>cpp</LanguageTag>
+    <PlatformTag>Xbox360</PlatformTag>
+    <ProjectTypeTag>Games</ProjectTypeTag>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="$projectname$.vcxproj" File="Xbox360App.vcxproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="$projectname$.vcxproj.filters">Xbox360App.vcxproj.filters</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="stdafx.h">stdafx.h</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="stdafx.cpp">stdafx.cpp</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.cpp" OpenInEditor="true">TEST.cpp</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="ReadMe.txt">ReadMe.txt</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The 32-bit XDevkit host. PlatformTarget MUST be x86: XDevkit's typelib describes 32-bit struct
+       layouts, so XBOX_EVENT_INFO / XBOX_PROCESS_INFO access-violate in a 64-bit process (verified on
+       real hardware). The x64 VS extension drives this over stdin/stdout. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net472</TargetFramework>
+    <PlatformTarget>x86</PlatformTarget>
+    <AssemblyName>Xbox360.XdkHost</AssemblyName>
+    <RootNamespace>Xbox360.XdkHost</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.XDevkit">
+      <HintPath>..\Xbox360Package\libs\Interop.XDevkit.dll</HintPath>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

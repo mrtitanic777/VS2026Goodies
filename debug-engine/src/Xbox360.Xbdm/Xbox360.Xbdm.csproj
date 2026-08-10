@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Managed XBDM (Xbox Debug Monitor) client — the transport foundation for the
+       modern Xbox 360 AD7 debug engine. Pure managed, AnyCPU: no dependency on the
+       x86 xbdm.dll, so it can host in 64-bit Visual Studio 2026. -->
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Platforms>AnyCPU</Platforms>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>Xbox360.Xbdm</AssemblyName>
+    <RootNamespace>Xbox360.Xbdm</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+</Project>

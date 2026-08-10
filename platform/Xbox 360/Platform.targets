@@ -1,0 +1,135 @@
+<!--
+Platform.targets  —  Xbox 360
+Defers to the shared C++ platform targets (which import our Toolset.targets),
+then adds the Xbox-specific packaging step: wrap the linked PE image into a .xex.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Platform.targets"/>
+
+  <!-- Property pages, ported verbatim from the original VS2010 Microsoft.CppCommon.Xbox 360.targets.
+       With UseDefaultPropertyPageSchemas=false (set in Platform.Common.props) the generic MSVC pages
+       are suppressed; this list restores the exact XDK property grid: stock helper pages
+       ($(VCTargetsPath)$(LangID)\*.xml, all present in v170) plus the authentic XDK rule files from
+       our 1033\ folder ($(Xbox360PropertyPagesPath)). $(LangID) resolves to the locale (1033), the
+       same variable the stock CppBuild.targets uses. -->
+  <ItemGroup>
+    <!-- Property pages that always apply -->
+    <PropertyPageSchema Include="
+        $(VCTargetsPath)$(LangID)\ProjectItemsSchema.xml;
+        $(VCTargetsPath)$(LangID)\debugger_general.xml;
+        $(VCTargetsPath)$(LangID)\midl.xml;
+        $(VCTargetsPath)$(LangID)\custom_build_tool.xml;"/>
+
+    <!-- Property pages that depend on the Makefile configuration type -->
+    <PropertyPageSchema Condition="'$(ConfigurationType)'!='Makefile'" Include="$(VCTargetsPath)$(LangID)\build_events.xml" />
+    <PropertyPageSchema Condition="'$(ConfigurationType)'=='Makefile'" Include="$(Xbox360PropertyPagesPath)nmake.xml" />
+
+    <!-- Xbox 360 remote debugger property page -->
+    <PropertyPageSchema Include="$(Xbox360PropertyPagesPath)debugger_remote.xml"/>
+
+    <!-- Property-sheet-specific property pages -->
+    <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\usermacros.xml">
+      <Context>PropertySheet</Context>
+    </PropertyPageSchema>
+
+    <!-- Switch view between project-property directories and environment variables -->
+    <PropertyPageSchema Condition="'$(UseEnv)' != 'true'" Include="$(VCTargetsPath)$(LangID)\directories.xml" />
+    <PropertyPageSchema Condition="'$(UseEnv)' == 'true'" Include="$(VCTargetsPath)$(LangID)\envvars.xml" />
+
+    <PropertyPageSchema Include="
+        $(VCTargetsPath)$(LangID)\bscmake.xml;
+        $(VCTargetsPath)$(LangID)\custom_build_step.xml;
+        $(Xbox360PropertyPagesPath)lib.xml;
+        $(Xbox360PropertyPagesPath)link.xml;
+        $(Xbox360PropertyPagesPath)imagexex.xml;
+        $(Xbox360PropertyPagesPath)deploy.xml;
+    "/>
+
+    <PropertyPageSchema Condition="'$(ConfigurationType)'!='Makefile' and '$(ConfigurationType)'!='Utility'" Include="$(Xbox360PropertyPagesPath)cl.xml"/>
+
+    <!-- General properties for non-Makefile configuration types -->
+    <PropertyPageSchema Condition="'$(ConfigurationType)'!='Makefile'" Include="$(Xbox360PropertyPagesPath)general.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+    <PropertyPageSchema Condition="'$(ConfigurationType)'!='Makefile'" Include="$(Xbox360PropertyPagesPath)general_ps.xml">
+      <Context>PropertySheet</Context>
+    </PropertyPageSchema>
+
+    <!-- General properties for the Makefile configuration type -->
+    <PropertyPageSchema Condition="'$(ConfigurationType)'=='Makefile'" Include="$(Xbox360PropertyPagesPath)general_makefile.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+    <PropertyPageSchema Condition="'$(ConfigurationType)'=='Makefile'" Include="$(Xbox360PropertyPagesPath)general_makefile_ps.xml">
+      <Context>PropertySheet</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
+
+  <!-- Compile/link use VS's stock CL/Link tasks (driven at $(CLToolPath)=$(XEDK)\bin\win32).
+       We deliberately do NOT register the modernized DLL's tasks here: because the Xbox 360
+       platform is 32-bit ($(PlatformArchitecture)=32 -> $(PreferredToolArchitecture)=x86),
+       v180 MSBuild runs C++ build tasks in an x86 task host, and an AnyCPU custom task fails
+       to instantiate there ("Type must be a type provided by the runtime"). imagexex/deploy
+       are external command-line tools, so we invoke them via <Exec> — architecture-independent
+       and proven across v150-v180. (The modernized DLL remains in dll-modernization/ as the
+       reverse-engineering artifact; it loads fine in-process under command-line/older MSBuild.) -->
+
+  <!-- Default CL output-file metadata normally supplied by the MSVC toolset props
+       (which we intentionally do not import). The stock targets require these on
+       every ClCompile item. $(IntDir) is finalized by the time targets evaluate. -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <ObjectFileName            Condition="'%(ClCompile.ObjectFileName)'            == ''">$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName   Condition="'%(ClCompile.ProgramDataBaseFileName)'   == ''">$(IntDir)</ProgramDataBaseFileName>
+      <AssemblerListingLocation  Condition="'%(ClCompile.AssemblerListingLocation)'  == ''">$(IntDir)</AssemblerListingLocation>
+      <!-- Modern cl switches the XDK's cl 16.00 doesn't recognize (D9002). Clear the
+           metadata so the CL task omits them: /diagnostics: /Zc:inline /external:W /errorReport:. -->
+      <DiagnosticsFormat></DiagnosticsFormat>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <ExternalWarningLevel></ExternalWarningLevel>
+      <ErrorReporting></ErrorReporting>
+    </ClCompile>
+    <!-- Suppress the Win32-only security/link switches entirely. /SUBSYSTEM:XBOX
+         rejects even the ':NO' forms, so these must be emitted as NO switch at all
+         (empty metadata => the Link task omits the option). -->
+    <Link>
+      <RandomizedBaseAddress></RandomizedBaseAddress>          <!-- no /DYNAMICBASE -->
+      <DataExecutionPrevention></DataExecutionPrevention>      <!-- no /NXCOMPAT -->
+      <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers> <!-- no /SAFESEH -->
+      <TargetMachine>NotSet</TargetMachine>                    <!-- no /MACHINE -->
+      <!-- The XDK linker accepts plain /DEBUG but not the modern /DEBUG:FULL or
+           /DEBUG:FASTLINK. Remap those (and the empty default) to legacy 'true'. -->
+      <GenerateDebugInformation Condition="'%(Link.GenerateDebugInformation)'=='' or '%(Link.GenerateDebugInformation)'=='DebugFull' or '%(Link.GenerateDebugInformation)'=='DebugFastLink'">true</GenerateDebugInformation>
+      <!-- Whole-program opt: our PlatformTarget=x86 makes WholeProgramOptimization.props
+           pick UseFastLinkTimeCodeGeneration (/LTCG:incremental), which the XDK linker
+           rejects. Remap the fast/incremental forms to plain /LTCG. -->
+      <LinkTimeCodeGeneration Condition="'%(Link.LinkTimeCodeGeneration)'=='UseFastLinkTimeCodeGeneration' or ('%(Link.LinkTimeCodeGeneration)'=='' and '$(WholeProgramOptimization)'=='true')">UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <PropertyGroup>
+    <ImageXexOutput Condition="'$(ImageXexOutput)' == ''">$(OutDir)$(TargetName).xex</ImageXexOutput>
+    <!-- The XDK linker has no incremental-link database; force off so the Link task omits
+         /ILK (LNK4044). Set here (imported after the project body) to override a project's
+         Debug LinkIncremental=true. -->
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+
+  <!-- ImageXex: convert the linker's raw PE output into a bootable Xbox 360 .xex via the
+       XDK's imagexex.exe (external tool -> <Exec>, no task-host dependency). -->
+  <Target Name="ImageXex"
+          AfterTargets="Link"
+          Condition="'$(ConfigurationType)' == 'Application' or '$(ConfigurationType)' == 'DynamicLibrary'"
+          Inputs="$(OutDir)$(TargetName)$(TargetExt)"
+          Outputs="$(ImageXexOutput)">
+    <Message Importance="high" Text="ImageXex : $(TargetName)$(TargetExt) -&gt; $(ImageXexOutput)" />
+    <Exec Command="&quot;$(ImageXexToolExe)&quot; /nologo /out:&quot;$(ImageXexOutput)&quot; &quot;$(OutDir)$(TargetName)$(TargetExt)&quot;" />
+  </Target>
+
+  <!-- Safety net: turn a missing/unconfigured XDK into a clear, actionable message instead of a
+       cryptic "cl.exe not found". $(XDKInstallDir) is resolved in Platform.Default.props from the
+       XEDK env var or the Xbox\2.0\SDK registry key. -->
+  <Target Name="_CheckXbox360Xdk" BeforeTargets="ClCompile;Link;Lib;ResourceCompile">
+    <Error Condition="'$(XDKInstallDir)' == '' or !Exists('$(XDKInstallDir)bin\win32\cl.exe')"
+           Text="Xbox 360 XDK not found. Install the Xbox 360 XDK (21256) and set the XEDK environment variable (or reboot after installing), then reopen the solution. Expected the compiler at: $(XDKInstallDir)bin\win32\cl.exe" />
+  </Target>
+</Project>

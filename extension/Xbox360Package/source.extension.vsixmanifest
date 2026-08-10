@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="Xbox360Extensions.VS2026.1" Version="2.0.0" Language="en-US" Publisher="Xbox 360 Homebrew" />
+    <DisplayName>Xbox 360 Extensions for Visual Studio</DisplayName>
+    <Description xml:space="preserve">Develop, build, and deploy Xbox 360 (XDK 21256) titles in Visual Studio 2022 and 2026 — the Xbox 360 platform toolset, project templates, the Sample Browser, and deploy-and-run to devkit / RGH / JTAG consoles. Installs and configures the platform automatically on first launch.</Description>
+    <!-- <MoreInfo>https://your-repo-or-release-page</MoreInfo>  ← add a real URL before publishing;
+         omitted rather than shipping the dead https://github.com/ placeholder. -->
+    <License>license.txt</License>
+    <Icon>icon.png</Icon>
+    <PreviewImage>icon.png</PreviewImage>
+    <Tags>Xbox 360, XDK, homebrew, game development, C++</Tags>
+  </Metadata>
+  <Installation>
+    <!-- VS 2022 (17.x) and VS 2026 (18.x), all editions. Each InstallationTarget is OR'd,
+         so the extension installs if ANY match. -->
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,19.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[17.0,19.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0,19.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.7.2,)" />
+  </Dependencies>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,19.0)" DisplayName="Visual Studio core editor" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.VC.CoreIde" Version="[17.0,19.0)" DisplayName="C++ core features" />
+  </Prerequisites>
+  <Assets>
+    <!-- New Project templates (native VSIX delivery). -->
+    <Asset Type="Microsoft.VisualStudio.ProjectTemplate" Path="ProjectTemplates" />
+    <!-- The command package: Sample Browser, Deploy &amp; Run, Set Default Console. -->
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="Xbox360Package" Path="|Xbox360Package;PkgdefProjectOutputGroup|" />
+  </Assets>
+</PackageManifest>

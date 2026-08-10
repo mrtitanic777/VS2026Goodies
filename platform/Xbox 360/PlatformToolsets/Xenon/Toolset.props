@@ -1,0 +1,58 @@
+<!--
+Toolset.props  —  Xbox 360 / Xenon toolset
+Points the stock CL/Link/Lib MSBuild tasks at the XDK's PowerPC toolchain and
+sets the compiler/linker search paths. Deliberately does NOT import the MSVC
+Win32 toolset props (that would target the host x86/x64 compiler).
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildThisFileDirectory)ImportBefore\*.props" Condition="Exists('$(MSBuildThisFileDirectory)ImportBefore')" />
+
+  <!-- Xbox 360 is not a CoreWindows target: suppress the default Win32 import
+       libraries (kernel32.lib, user32.lib, ...) that Common.props would otherwise
+       add via Microsoft.Cpp.CoreWin.props. Must be set before Common.props imports. -->
+  <PropertyGroup>
+    <NonCoreWin>true</NonCoreWin>
+  </PropertyGroup>
+
+  <!-- Arch-neutral ConfigurationType->property mapping (LinkCompiled, OutputType,
+       TargetExt). Normally pulled in by the MSVC toolset props, which we skip; this
+       file itself carries no MSVC compiler paths, so importing it directly is safe. -->
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Common.props" />
+
+  <PropertyGroup>
+    <!-- Which executables the CL/Link/Lib tasks invoke, and where they live. -->
+    <CLToolExe   Condition="'$(CLToolExe)'   == ''">cl.exe</CLToolExe>
+    <CLToolPath  Condition="'$(CLToolPath)'  == ''">$(XDKInstallDir)bin\win32</CLToolPath>
+    <LinkToolExe  Condition="'$(LinkToolExe)'  == ''">link.exe</LinkToolExe>
+    <LinkToolPath Condition="'$(LinkToolPath)' == ''">$(XDKInstallDir)bin\win32</LinkToolPath>
+    <LibToolExe  Condition="'$(LibToolExe)'  == ''">lib.exe</LibToolExe>
+    <LibToolPath Condition="'$(LibToolPath)' == ''">$(XDKInstallDir)bin\win32</LibToolPath>
+
+    <!-- MSBuild task-host architecture. With stock CL/Link + Exec-based imagexex/deploy,
+         no custom task needs loading, so this can stay at the platform's native 32-bit. -->
+    <VCToolArchitecture Condition="'$(VCToolArchitecture)' == ''">Native32Bit</VCToolArchitecture>
+
+    <!-- Header/library/binary search paths handed to the tools (INCLUDE / LIB / PATH).
+         ExecutablePath is the PATH for tool invocation AND for CustomBuild/PostBuild script
+         steps. The XDK bin comes first (so its cl/link/fxc/xuipkg/imagexex win), but we MUST
+         append the broader environment ($(PATH) + VS dirs) — the original XDK platform did the
+         same (…;$(PATH);). Without it, .cmd/.bat packaging scripts (XLA content, disc layout,
+         XUI ResX splitting) lose System32 and the inherited env and fail with 9009 / errorlevel. -->
+    <ExecutablePath Condition="'$(ExecutablePath)' == ''">$(XDKInstallDir)bin\win32;$(MSBuildProjectDirectory);$(VSInstallDir)Common7\IDE;$(VSInstallDir)Common7\Tools;$(MSBuildToolsPath);$(PATH)</ExecutablePath>
+    <IncludePath    Condition="'$(IncludePath)'    == ''">$(XDKInstallDir)include\xbox</IncludePath>
+    <LibraryPath    Condition="'$(LibraryPath)'    == ''">$(XDKInstallDir)lib\xbox</LibraryPath>
+    <ExcludePath    Condition="'$(ExcludePath)'    == ''">$(XDKInstallDir)include\xbox\sys;$(XDKInstallDir)include\xbox\codeanalysis</ExcludePath>
+
+    <!-- imagexex packaging tool. -->
+    <ImageXexToolExe Condition="'$(ImageXexToolExe)' == ''">$(XDKInstallDir)bin\win32\imagexex.exe</ImageXexToolExe>
+
+    <!-- Xbox has no Windows SDK; point this at the XDK so the stock targets stop
+         warning (MSB8003). None of those Win32 SDK tools are used by Xbox builds. -->
+    <WindowsSDKDir Condition="'$(WindowsSDKDir)' == ''">$(XDKInstallDir)</WindowsSDKDir>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)ImportAfter\*.props" Condition="Exists('$(MSBuildThisFileDirectory)ImportAfter')" />
+
+  <!-- Intentionally imported last, matching the stock toolset ordering. -->
+  <Import Project="$(_PlatformFolder)Platform.Common.props"/>
+</Project>

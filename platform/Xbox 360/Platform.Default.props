@@ -1,0 +1,24 @@
+<!--
+Platform.Default.props  —  Xbox 360 (ported to Visual Studio 2026 / v170 layout)
+Establishes the platform identity and resolves the XDK install root.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Condition="Exists('$(MSBuildThisFileDirectory)ImportBefore\Default')" Project="$(MSBuildThisFileDirectory)ImportBefore\Default\*.props" />
+
+  <PropertyGroup>
+    <PlatformShortName>xbox</PlatformShortName>
+    <PlatformArchitecture>32</PlatformArchitecture>
+    <PlatformTarget>x86</PlatformTarget>
+    <DefaultPlatformToolset Condition="'$(DefaultPlatformToolset)' == ''">Xenon</DefaultPlatformToolset>
+    <CharacterSet Condition="'$(CharacterSet)' == ''">MultiByte</CharacterSet>
+
+    <!-- Resolve the Xbox 360 XDK root. Prefer the XEDK environment variable, then the
+         installer's registry key (32-bit hive), then the standard install location. -->
+    <XDKInstallDir Condition="'$(XDKInstallDir)' == '' and '$(XEDK)' != ''">$(XEDK)</XDKInstallDir>
+    <XDKInstallDir Condition="'$(XDKInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Xbox\2.0\SDK@InstallPath)</XDKInstallDir>
+    <XDKInstallDir Condition="'$(XDKInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Xbox\2.0\SDK@InstallPath)</XDKInstallDir>
+    <XDKInstallDir Condition="'$(XDKInstallDir)' != '' and !HasTrailingSlash('$(XDKInstallDir)')">$(XDKInstallDir)\</XDKInstallDir>
+  </PropertyGroup>
+
+  <Import Condition="Exists('$(MSBuildThisFileDirectory)ImportAfter\Default')" Project="$(MSBuildThisFileDirectory)ImportAfter\Default\*.props" />
+</Project>
