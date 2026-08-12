@@ -91,6 +91,7 @@ project against a private copy of the toolset — e.g.
 | `test/HelloXbox/` | Minimal test project (builds a valid XEX2) |
 | `generate-interop.ps1`, `fetch-property-pages.ps1`, `setup.ps1` | Local setup from your XDK |
 | `install.ps1`, `install-templates.ps1`, `build-*.ps1`, `deploy-run.ps1` | Build / install / deploy scripts |
+| `release/`, [RELEASING.md](RELEASING.md) | No-compile release asset + how to cut a release |
 
 ## License
 
