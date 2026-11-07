@@ -7,6 +7,11 @@
 
 ---
 
+<p align="center">
+  <img src="docs/screenshots/01-build-succeeded.jpg" alt="HelloXbox rebuilt for Xbox 360 inside Visual Studio 2026" width="900">
+  <br><sub>HelloXbox rebuilt for Xbox 360 inside Visual Studio 2026 — <code>cl</code> → <code>link</code> → <code>ImageXex</code> produce a <code>.xex</code>.</sub>
+</p>
+
 ## What this is
 
 A Visual Studio extension (`Xbox360Package.vsix`) and supporting toolchain that
@@ -41,6 +46,17 @@ put it anywhere specific.
 You must supply your own legally licensed Xbox 360 XDK. (Note: a VSIX you *build*
 locally will contain these Microsoft-owned files — that build is for your own use;
 redistributing a built VSIX is a separate matter this repo does not cover.)
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Xbox 360 commands in the Tools menu](docs/screenshots/02-xbox360-tools-menu.jpg) | ![Project properties with the Xenon toolset](docs/screenshots/03-xenon-property-pages.jpg) |
+| Xbox 360 commands in the **Tools** menu: Sample Browser, Deploy & Run, default console, debug output, Deploy & Debug (F5). | Project properties: **Xbox 360** platform, **Xenon** toolset, configuration type **Title (.xex)**. |
+
+![Xbox 360 Extensions for Visual Studio in Extension Manager](docs/screenshots/04-extension-manager.jpg)
+
+*The extension installed in Visual Studio's Extension Manager.*
 
 ## Requirements
 
